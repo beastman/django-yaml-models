@@ -1,3 +1,5 @@
+import os
+
 # Django settings for smyt_test project.
 def rel(*x):
     return os.path.join(os.path.abspath(os.path.dirname(__file__)), *x)
