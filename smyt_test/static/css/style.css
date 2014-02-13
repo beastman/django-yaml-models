@@ -1,0 +1,8 @@
+#sidebar {
+    border: 1px solid black;
+    float: left;
+    width: 180px;
+}
+#content {
+    margin-left: 240px;
+}
