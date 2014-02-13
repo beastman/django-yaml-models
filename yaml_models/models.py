@@ -7,6 +7,6 @@ class YamlModel(models.Model):
         fields = self._meta.get_all_field_names()
         #TODO: СДелать проход по списку полей с поиском названий, которые можно использовать для вывода,
         #вместо первого попавшегося (title, display_value, etc)
-        return getattr(self, fields[0])
+        return unicode(getattr(self, fields[0]))
     class Meta:
         abstract = True
