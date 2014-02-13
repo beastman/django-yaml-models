@@ -18,7 +18,7 @@ $(function() {
     $('#models_list a:first').trigger('click');
 
     $('#content').on('click', 'input.datepicker', function() {
-        $(this).datepicker();
+        $(this).datepicker({dateFormat: 'yy-mm-dd'});
         $(this).datepicker("show");
     });
     $('#content').on('submit', '#add-form form', function() {
