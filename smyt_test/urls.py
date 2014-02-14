@@ -9,6 +9,7 @@ urlpatterns = patterns('',
     url(r'^$', 'smyt_test.views.home', name='home'),
     url(r'^load-model-data$', 'smyt_test.views.load_model_data', name='load_model_data'),
     url(r'^add$', 'smyt_test.views.add_record', name='add_record'),
+    url(r'^edit', 'smyt_test.views.edit_record', name='edit_record'),
     # url(r'^smyt_test/', include('smyt_test.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:

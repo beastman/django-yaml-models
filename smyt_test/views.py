@@ -1,5 +1,5 @@
 from django.template import RequestContext
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.importlib import import_module
 from django.http import Http404, HttpResponse
 from django.db import models
@@ -70,6 +70,30 @@ def add_record(request):
     if form.is_valid():
         form.instance.save()
         response['success'] = True
+    else:
+        response['success'] = False
+        response['errors'] = []
+        for field in form:
+            for error in field.errors:
+                response['errors'].append(u'{0} - {1}'.format(field.label, error))
+    return HttpResponse(json.dumps(response))
+
+def edit_record(request):
+    from smyt_test import models as main_app_models
+    model_class_name = request.POST.get('model')
+    if not model_class_name or not hasattr(main_app_models, model_class_name):
+        raise Http404
+    model_class = getattr(main_app_models, model_class_name)
+    pk = request.POST.get('pk')
+    instance = get_object_or_404(model_class, pk=pk)
+    field_name = request.POST.get('col_name')
+    model_form = modelform_factory(model_class, fields=[field_name,])
+    form = model_form(request.POST, instance=instance)
+    response = {}
+    if form.is_valid():
+        form.instance.save()
+        response['success'] = True
+        response['csrf_token'] = get_token(request)
     else:
         response['success'] = False
         response['errors'] = []

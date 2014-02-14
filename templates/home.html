@@ -10,6 +10,9 @@
     <script type="text/javascript" src="{{ STATIC_URL }}js/script.js"></script>
     <link rel="stylesheet" href="{{ STATIC_URL }}css/ui-lightness/jquery-ui.min.css"/>
     <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css"/>
+    <script type="text/javascript">
+        csrf_token = '{{ csrf_token }}';
+    </script>
 </head>
 <body>
 <div id="sidebar">
@@ -29,7 +32,7 @@
 {% verbatim %}
 <div id="templates">
     <script id="datatable-template" type="text/x-jquery-tmpl">
-        <table>
+        <table model-class="${model_class}">
             <thead>
                 <tr>
                 {{each(index, value) columns}}
@@ -39,9 +42,9 @@
             </thead>
             {{each(index, value) rows}}
             <tbody>
-                <tr>
+                <tr pk="${value.id}">
                     {{each(col_index, col_value) columns}}
-                    <td>${value[col_index]}</td>
+                    <td column="${col_index}" type="${columns[col_index].type}"{{if columns[col_index].type!='pk'}}class="editable"{{/if}}>${value[col_index]}</td>
                     {{/each}}
                 </tr>
             </tbody>
@@ -68,6 +71,21 @@
             {{/if}}
         {{/each}}
         <p><input type="submit" value="Добавить" /></p>
+        </form>
+    </script>
+    <script  id="edit-form-template" type="text/x-jquery-tmpl">
+        <form action="/edit" method="post">
+        <input type="hidden" name="model" value="${model_class}"/>
+        <input type="hidden" name="csrfmiddlewaretoken" value="${csrf_token}"/>
+        <input type="hidden" name="pk" value="${row_pk}" />
+        <input type="hidden" name="col_name" value="${col_name}" />
+        {{if type == 'str' || type == 'int'}}
+            <input type="text" name="${col_name}" class="value_input" value="${value}" />
+        {{else}}
+            {{if type == 'date'}}
+                <input type="text" name="${col_name}" class="value_input datepicker" value="${value}" />
+            {{/if}}
+        {{/if}}
         </form>
     </script>
 </div>
