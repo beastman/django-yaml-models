@@ -35,7 +35,6 @@ def dict_to_model_class(app_name, class_name, model_dict):
 def models_from_yaml(yaml_path, app_name, models_module, admin_register=True):
     models_module = import_module(models_module)
     models_data = yaml.load(open(yaml_path), Loader=OrderedDictYAMLLoader)
-    print models_data
     result = []
     for key in models_data.keys():
         class_name = key.lower().capitalize()
