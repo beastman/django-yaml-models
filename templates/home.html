@@ -29,8 +29,8 @@
     <div id="datatable"></div>
     <div id="add-form"></div>
 </div>
-{% verbatim %}
 <div id="templates">
+    {% verbatim %}
     <script id="datatable-template" type="text/x-jquery-tmpl">
         <table model-class="${model_class}">
             <thead>
@@ -44,14 +44,27 @@
             <tbody>
                 <tr pk="${value.id}">
                     {{each(col_index, col_value) columns}}
+                    {% endverbatim %}
+                    {% if user.is_authenticated %}
+                    {% verbatim %}
                     <td column="${col_index}" type="${columns[col_index].type}"{{if columns[col_index].type!='pk'}}class="editable"{{/if}}>${value[col_index]}</td>
+                    {% endverbatim %}
+                    {% else %}
+        {% verbatim %}
+                    <td column="${col_index}" type="${columns[col_index].type}">${value[col_index]}</td>
+                    {% endverbatim %}
+                        {% endif %}
+                    {% verbatim %}
                     {{/each}}
                 </tr>
             </tbody>
             {{/each}}
         </table>
     </script>
-    <script  id="add-form-template" type="text/x-jquery-tmpl">
+    {% endverbatim %}
+    {% if user.is_authenticated %}
+        {% verbatim %}
+        <script  id="add-form-template" type="text/x-jquery-tmpl">
         <h2>Добавить запись</h2>
         <form action="/add" method="post">
         <input type="hidden" name="model" value="${model_class}"/>
@@ -73,7 +86,16 @@
         <p><input type="submit" value="Добавить" /></p>
         </form>
     </script>
+        {% endverbatim %}
+    {% else %}
+        <script  id="add-form-template" type="text/x-jquery-tmpl">
+        <h2>Добавить запись</h2>
+        <p>Редактирование доступно только залогиненным пользователям</p>
+        </script>
+    {% endif %}
     <script  id="edit-form-template" type="text/x-jquery-tmpl">
+        {% if user.is_authenticated %}
+{% verbatim %}
         <form action="/edit" method="post">
         <input type="hidden" name="model" value="${model_class}"/>
         <input type="hidden" name="csrfmiddlewaretoken" value="${csrf_token}"/>
@@ -87,8 +109,9 @@
             {{/if}}
         {{/if}}
         </form>
+        {% endverbatim %}
+        {% endif %}
     </script>
 </div>
-{% endverbatim %}
 </body>
 </html>

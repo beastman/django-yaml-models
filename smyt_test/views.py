@@ -8,6 +8,7 @@ from collections import OrderedDict
 from django.middleware.csrf import get_token
 from django.forms.models import modelform_factory
 from django.utils.html import escape
+from django.contrib.auth.decorators import login_required
 
 
 def home(request):
@@ -58,6 +59,7 @@ def load_model_data(request):
     return HttpResponse(json.dumps(response))
 
 
+@login_required
 def add_record(request):
     from smyt_test import models as main_app_models
     model_class_name = request.POST.get('model')
@@ -78,6 +80,8 @@ def add_record(request):
                 response['errors'].append(u'{0} - {1}'.format(field.label, error))
     return HttpResponse(json.dumps(response))
 
+
+@login_required
 def edit_record(request):
     from smyt_test import models as main_app_models
     model_class_name = request.POST.get('model')
